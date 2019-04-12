@@ -38,18 +38,52 @@ pbSmpBiom <- function(x.count, prior.p = NULL, iter = 4000) {
 
 #' Posterior joint sample cut points and step response rates
 #'
-#' @param x.cut     biomarker levels
+#' @param x.cut     observed biomarker levels
 #' @param y         response status
 #' @param cand.cuts candidate cut points
 #'
 #'
 #' @export
-pbSmpResp <- function(x.cut, y, cand.cuts, type = c("simplebin"), ...) {
+pbSmpResp <- function(x.w.cut, y, cand.cuts = NULL, type = c("simplebin"), iter = 4000, ...) {
     type <- match.arg(type);
+
+    if (is.null(cand.cuts))
+        cand.cuts <- 1:max(x.cut);
+
     rst  <- switch(type,
-                   simplebin = prvSmpSimplebin(x.cut, y, cand.cuts, ...));
+                   simplebin = prvSmpSimplebin(x.cut, y, cand.cuts, iter = iter, ...));
 
     rst
+}
+
+
+#' Posterior cumulative response rate
+#'
+#' @param post.p biomarker interval probabilities
+#' @param post.q response rates
+#'
+#' @export
+pbCumuResp <- function(post.p, post.q) {
+
+    nc <- ncol(post.p);
+    stopifnot(nc == ncol(post.q));
+
+    fcum <- function(p, q) {
+        p <- p[nc:1];
+        q <- q[nc:1];
+
+        cpq <- cumsum(p * q);
+        cq  <- cumsum(p);
+
+        cp  <- cpq / cq;
+        cp[nc:1];
+    }
+
+    rst <- apply(cbind(post.p, post.q),
+                 1,
+                 function(x) {fcum(x[1:nc], x[nc+(1:nc)])});
+
+    t(rst)
 }
 
 #' Private Function: Sampling from simple binomial of response rates
