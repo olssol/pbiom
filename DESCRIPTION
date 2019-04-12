@@ -1,0 +1,29 @@
+Package: pbiom
+Title: Phase II Design for Biomarker Validation
+Version: 0.1
+Authors@R: 
+    person(given = "Chenguang",
+           family = "Wang",
+           role = c("aut", "cre"),
+           email = "cwang68@jhmi.edu")
+Description: What the package does (one paragraph).
+License: GPL (>=3)
+RcppModules: stan_fit4powerp_mod
+Depends: 
+    methods,
+    R (>= 3.4.0),
+    Rcpp (>= 1.0.1)
+Imports: 
+    rstan (>= 2.18.2),
+    rstantools (>= 1.5.1)
+LinkingTo: 
+    BH (>= 1.69.0-1),
+    Rcpp (>= 1.0.1),
+    RcppEigen (>= 0.3.3.5.0),
+    rstan (>= 2.18.2),
+    StanHeaders (>= 2.18.1)
+Encoding: UTF-8
+LazyData: true
+NeedsCompilation: yes
+SystemRequirements: GNU make
+RoxygenNote: 6.1.0
