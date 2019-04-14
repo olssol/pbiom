@@ -44,7 +44,7 @@ pbSmpBiom <- function(x.count, prior.p = NULL, iter = 4000) {
 #'
 #'
 #' @export
-pbSmpResp <- function(x.w.cut, y, cand.cuts = NULL, type = c("simplebin"), iter = 4000, ...) {
+pbSmpResp <- function(x.cut, y, cand.cuts = NULL, type = c("simplebin"), iter = 4000, ...) {
     type <- match.arg(type);
 
     if (is.null(cand.cuts))
