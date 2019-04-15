@@ -9,7 +9,7 @@ pbCutBiom <- function(x, cuts = NULL, probs = c(0.25, 0.5, 0.75)) {
         cuts <- quantile(x, probs = probs);
     }
 
-    cuts.inf <- c(-Inf, cuts, Inf);
+    cuts.inf <- unique(c(-Inf, cuts, Inf));
     cut.x    <- cut(x, breaks = cuts.inf, labels = 1:(length(cuts.inf)-1));
     cou.x    <- table(cut.x)
 
@@ -59,38 +59,35 @@ pbSmpResp <- function(x.cut, y, cand.cuts = NULL, type = c("simplebin"), iter = 
 
 #' Posterior cumulative response rate
 #'
-#' @param post.p biomarker interval probabilities
-#' @param post.q response rates
+#' @param post.q biomarker interval probabilities
+#' @param post.p response rates
+#'
+#' @return biomarker probabilities and response rates conditioning on biomarker
+#'     values bigger than cut points
 #'
 #' @export
-pbCumuResp <- function(post.p, post.q) {
+pbCumuPQ <- function(post.q, post.p) {
 
     nc <- ncol(post.p);
     stopifnot(nc == ncol(post.q));
 
-    fcum <- function(p, q) {
-        p <- p[nc:1];
-        q <- q[nc:1];
+    post.q <- post.q[,nc:1];
+    post.p <- post.p[,nc:1];
+    pq     <- post.q * post.p;
 
-        cpq <- cumsum(p * q);
-        cq  <- cumsum(p);
+    cumu.q  <- apply(post.q, 1, cumsum);
+    cumu.pq <- apply(pq,     1, cumsum);
+    cumu.p  <- cumu.pq / cumu.q;
 
-        cp  <- cpq / cq;
-        cp[nc:1];
-    }
-
-    rst <- apply(cbind(post.p, post.q),
-                 1,
-                 function(x) {fcum(x[1:nc], x[nc+(1:nc)])});
-
-    t(rst)
+    list(cumu.q = t(cumu.q)[,nc:1],
+         cumu.p = t(cumu.p)[,nc:1]);
 }
 
 #' Private Function: Sampling from simple binomial of response rates
 #'
 #'
 #'
-prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000, pri.a = 0.5, pri.b = 0.5) {
+prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000, prior.q = c(a = 0.5, b = 0.5)) {
     rst <- NULL;
     for (ct in cand.cuts) {
         cur.inx <- which(ct <= x.cut);
@@ -103,7 +100,7 @@ prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000, pri.a = 0.5, pri.b
             cur.b <- cur.n - cur.a;
         }
 
-        cur.rst <- rbeta(n = iter, cur.a + pri.a, cur.b + pri.b);
+        cur.rst <- rbeta(n = iter, cur.a + prior.q["a"], cur.b + prior.q["b"]);
         rst     <- cbind(rst, cur.rst);
     }
     colnames(rst) <- cand.cuts;

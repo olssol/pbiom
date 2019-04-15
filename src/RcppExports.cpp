@@ -6,17 +6,6 @@
 
 using namespace Rcpp;
 
-// ptemp
-double ptemp(double u);
-RcppExport SEXP _pbiom_ptemp(SEXP uSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type u(uSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptemp(u));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pbCfYtest
 double pbCfYtest(NumericVector y, double theta0);
 RcppExport SEXP _pbiom_pbCfYtest(SEXP ySEXP, SEXP theta0SEXP) {
@@ -61,12 +50,42 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pbCfUti
+NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt, double B1, double C1, double C2, double C3);
+RcppExport SEXP _pbiom_pbCfUti(SEXP prstSEXP, SEXP utifSEXP, SEXP theta0SEXP, SEXP esttSEXP, SEXP B1SEXP, SEXP C1SEXP, SEXP C2SEXP, SEXP C3SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type prst(prstSEXP);
+    Rcpp::traits::input_parameter< int >::type utif(utifSEXP);
+    Rcpp::traits::input_parameter< double >::type theta0(theta0SEXP);
+    Rcpp::traits::input_parameter< double >::type estt(esttSEXP);
+    Rcpp::traits::input_parameter< double >::type B1(B1SEXP);
+    Rcpp::traits::input_parameter< double >::type C1(C1SEXP);
+    Rcpp::traits::input_parameter< double >::type C2(C2SEXP);
+    Rcpp::traits::input_parameter< double >::type C3(C3SEXP);
+    rcpp_result_gen = Rcpp::wrap(pbCfUti(prst, utif, theta0, estt, B1, C1, C2, C3));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ptemp
+double ptemp(double u);
+RcppExport SEXP _pbiom_ptemp(SEXP uSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type u(uSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptemp(u));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_pbiom_ptemp", (DL_FUNC) &_pbiom_ptemp, 1},
     {"_pbiom_pbCfYtest", (DL_FUNC) &_pbiom_pbCfYtest, 2},
     {"_pbiom_pbCfPredSingle", (DL_FUNC) &_pbiom_pbCfPredSingle, 7},
     {"_pbiom_pbCfPred", (DL_FUNC) &_pbiom_pbCfPred, 6},
+    {"_pbiom_pbCfUti", (DL_FUNC) &_pbiom_pbCfUti, 8},
+    {"_pbiom_ptemp", (DL_FUNC) &_pbiom_ptemp, 1},
     {NULL, NULL, 0}
 };
 

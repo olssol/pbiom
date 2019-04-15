@@ -15,7 +15,7 @@
 #'
 #' @description Phase II Biomarker Study
 #'
-#' @section Functions
+#'
 #'
 #' \describe{
 #' \item{pbFoo}{Exported R function}

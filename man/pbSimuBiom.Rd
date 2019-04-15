@@ -2,11 +2,11 @@
 % Please edit documentation in R/pb_simu.R
 \name{pbSimuBiom}
 \alias{pbSimuBiom}
-\title{Simulation biomarkers from Normal or Log-Normal Distribution}
+\title{Simulate biomarkers from Normal or Log-Normal Distribution}
 \usage{
 pbSimuBiom(n, mu = 0, sd = 1, type = c("lognormal", "normal"),
   trunc.lb = -Inf, trunc.ub = Inf)
 }
 \description{
-Simulation biomarkers from Normal or Log-Normal Distribution
+Simulate biomarkers from Normal or Log-Normal Distribution
 }
