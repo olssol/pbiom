@@ -45,7 +45,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
                                  cumu.pq$cumu.p[,i,drop = F],
                                  j, theta0, alpha, repeach);
             for (k in uti.f) {
-                cur.uti <- pbCfUti(cur.pred, j, theta0 = theta0, estt = cur.estt,
+                cur.uti <- pbCfUti(cur.pred, utif = k, theta0 = theta0, estt = cur.estt,
                                    B1 = B1, C1 = C1, C2 = C2, C3 = C3);
                 cur.rst <- c(i, j, k, mean(cur.uti), mean(cur.uti > uti.cut));
                 rst     <- rbind(rst, cur.rst);

@@ -3,6 +3,7 @@
 #include <Rmath.h>
 
 using namespace Rcpp;
+
 // [[Rcpp::plugins("cpp11")]]
 
 
@@ -172,6 +173,8 @@ NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt,
 // [[Rcpp::export]]
 double ptemp(double u) {
   double rst;
+  Rcout << "value " << u << "\n";
+
   rst = pow(u, 2);
   return(rst);
 }

@@ -89,7 +89,7 @@ pbCumuPQ <- function(post.q, post.p) {
 #'
 #'
 prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000,
-                            prior.q = c(a = 0.5, b = 0.5)) {
+                            prior.p = c(a = 0.5, b = 0.5), ...) {
     rst <- NULL;
     for (ct in cand.cuts) {
         cur.inx <- which(ct == x.cut);
@@ -102,7 +102,7 @@ prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000,
             cur.b <- cur.n - cur.a;
         }
 
-        cur.rst <- rbeta(n = iter, cur.a + prior.q["a"], cur.b + prior.q["b"]);
+        cur.rst <- rbeta(n = iter, cur.a + prior.p["a"], cur.b + prior.p["b"]);
         rst     <- cbind(rst, cur.rst);
     }
     colnames(rst) <- cand.cuts;
