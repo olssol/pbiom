@@ -28,7 +28,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
 
     ## simulate first stage;
     s1x  <- do.call(pbSimuBiom, par.biom);
-    s1y  <- do.call(pbSimuResp, c(list(x = s1x), par.resp));
+    s1y  <- do.call(pbSimuResp, c(list(x = s1x), par.resp))$y;
 
     ## interim analysis
     s1x.cut <- pbCutBiom(s1x, cuts = truth.cuts);
@@ -42,7 +42,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
         cur.estt <- 1 - c(0, probs)[i];
         for (j in n2) {
             cur.pred <- pbCfPred(cumu.pq$cumu.q[,i,drop = F],
-                                 cumu.pq$cumu.q[,i,drop = F],
+                                 cumu.pq$cumu.p[,i,drop = F],
                                  j, theta0, alpha, repeach);
             for (k in uti.f) {
                 cur.uti <- pbCfUti(cur.pred, j, theta0 = theta0, estt = cur.estt,

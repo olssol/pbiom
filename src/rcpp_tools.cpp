@@ -63,7 +63,11 @@ void pbCfPredSingle(NumericVector vq, NumericVector vp, int n2,
 
   for (i = 0; i < rep; i++) {
     // negative binomial to get screened out numbers
-    nscreen = R::rnbinom(n2, sumvq);
+    if (sumvq > 0.9999999999) {
+      nscreen = 0;
+    } else {
+      nscreen = R::rnbinom(n2, sumvq);
+    }
 
     // sample biomarkers
     R::rmultinom(n2, vq.begin(), nc, x.begin());

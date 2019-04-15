@@ -36,7 +36,7 @@ pbSmpBiom <- function(x.count, prior.p = NULL, iter = 4000) {
 }
 
 
-#' Posterior joint sample cut points and step response rates
+#' Posterior response rates for each cut interval
 #'
 #' @param x.cut     observed biomarker levels
 #' @param y         response status
@@ -51,7 +51,8 @@ pbSmpResp <- function(x.cut, y, cand.cuts = NULL, type = c("simplebin"), iter = 
         cand.cuts <- 1:max(x.cut);
 
     rst  <- switch(type,
-                   simplebin = prvSmpSimplebin(x.cut, y, cand.cuts, iter = iter, ...));
+                   simplebin = prvSmpSimplebin(x.cut, y, cand.cuts,
+                                               iter = iter, ...));
 
     rst
 }
@@ -87,16 +88,17 @@ pbCumuPQ <- function(post.q, post.p) {
 #'
 #'
 #'
-prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000, prior.q = c(a = 0.5, b = 0.5)) {
+prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000,
+                            prior.q = c(a = 0.5, b = 0.5)) {
     rst <- NULL;
     for (ct in cand.cuts) {
-        cur.inx <- which(ct <= x.cut);
+        cur.inx <- which(ct == x.cut);
         cur.n   <- length(cur.inx);
         if (0 == cur.n) {
             cur.a <- 0;
             cur.b <- 0;
         } else {
-            cur.a <- length(which(0 == y[cur.inx]));
+            cur.a <- sum(y[cur.inx]);
             cur.b <- cur.n - cur.a;
         }
 

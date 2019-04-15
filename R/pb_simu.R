@@ -45,11 +45,15 @@ pbSimuBiom <- function(n, mu = 0, sd = 1, type = c("lognormal", "normal"),
 pbSimuResp <- function(x, betas, type = c("fourpar", "logit")) {
 
     type <- match.arg(type);
-    rst  <- switch(type,
+    py1  <- switch(type,
                    fourpar = betas[1] + (betas[2] - betas[1]) / (1 + (betas[3]/x)^betas[4]),
-                   logit   = {tmp <- betas[1] + betas[2]*x; 1 / (1 + exp(-tmp))}
+                   logit   = betas[1] + betas[2]*x
                    )
-    rst
+    py1  <- py1 / (1 + exp(py1));
+    rst  <- rbinom(length(x), 1, py1);
+
+    list(y   = rst,
+         py1 = py1);
 }
 
 
