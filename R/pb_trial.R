@@ -21,7 +21,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
         par.biom.truth   <- par.biom;
         par.biom.truth$n <- nlarge;
         truth.x          <- do.call(pbSimuBiom, par.biom);
-        truth.cuts       <- quantile(truth.cuts, probs = probs);
+        truth.cuts       <- quantile(truth.x, probs = probs);
     } else {
         truth.cuts <- cuts;
     }
