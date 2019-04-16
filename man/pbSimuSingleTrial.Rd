@@ -5,9 +5,10 @@
 \title{Simulate a single trial}
 \usage{
 pbSimuSingleTrial(par.biom, par.resp, n2, prior.p = NULL, prior.q = c(a
-  = 0.5, b = 0.5), theta0, uti.f, alpha = 0.05, cuts = NULL,
-  probs = c(0.25, 0.5, 0.75), cand.cuts = 1:(length(probs) + 1),
-  resp.mdl = "simplebin", iter = 4000, nlarge = 10000, repeach = 1)
+  = 0.5, b = 0.5), theta0, cuts = NULL, probs = c(0.25, 0.5, 0.75),
+  cand.cuts = 1:(length(probs) + 1), resp.mdl = "simplebin", uti.f,
+  alpha = 0.05, uti.cut = 0.1, B1 = 1, C1 = 1, C2 = 0, C3 = 0,
+  iter = 4000, nlarge = 10000, repeach = 1)
 }
 \arguments{
 \item{par.biom}{list of parameters for simulating biomarkers}

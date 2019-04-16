@@ -2,7 +2,7 @@
 % Please edit documentation in R/pb_sampling.R
 \name{pbSmpResp}
 \alias{pbSmpResp}
-\title{Posterior joint sample cut points and step response rates}
+\title{Posterior response rates for each cut interval}
 \usage{
 pbSmpResp(x.cut, y, cand.cuts = NULL, type = c("simplebin"),
   iter = 4000, ...)
@@ -15,5 +15,5 @@ pbSmpResp(x.cut, y, cand.cuts = NULL, type = c("simplebin"),
 \item{cand.cuts}{candidate cut points}
 }
 \description{
-Posterior joint sample cut points and step response rates
+Posterior response rates for each cut interval
 }
