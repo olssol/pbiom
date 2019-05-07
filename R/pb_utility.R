@@ -70,7 +70,7 @@ prvUti.2 <- function(n2, nscreenout, nresp, theta0, rej, estt, B1, C1, ...) {
     c(benefit, cost);
 }
 
-prevUti.5 <- function(rej, prespall, pextra, B1, C1, ...) {
+prvUti.5 <- function(rej, prespall, pextra, B1, C1, ...) {
     benefit <- B1 * rej + prespall;
     cost    <- (1 - prespall) + C1 * pextra;
 

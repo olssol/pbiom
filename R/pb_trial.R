@@ -27,8 +27,10 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
     }
 
     ## simulate first stage;
-    s1x  <- do.call(pbSimuBiom, par.biom);
-    s1y  <- do.call(pbSimuResp, c(list(x = s1x), par.resp))$y;
+    s1x    <- do.call(pbSimuBiom, par.biom);
+    s1y    <- do.call(pbSimuResp, c(list(x = s1x), par.resp))$y;
+    n1     <- par.biom$n;
+    nresp1 <- sum(s1y)
 
     ## interim analysis
     s1x.cut <- pbCutBiom(s1x, cuts = truth.cuts);
@@ -44,15 +46,29 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
             cur.pred <- pbCfPred(cumu.pq$cumu.q[,i,drop = F],
                                  cumu.pq$cumu.p[,i,drop = F],
                                  j, theta0, alpha, repeach);
+
+            ## summary
+            cur.sum <- apply(cur.pred, 2, mean);
+            cur.rst <- c(n1, nresp1, i, j,
+                         cur.sum[2], cur.sum[1], cur.sum[3],
+                         cur.sum[2]/j);
+
             for (k in uti.f) {
-                cur.uti <- pbCfUti(cur.pred, utif = k, theta0 = theta0, estt = cur.estt,
+                cur.uti <- pbCfUti(cbind(cur.pred, n1, nresp1),
+                                   utif = k, theta0 = theta0, estt = cur.estt,
                                    B1 = B1, C1 = C1, C2 = C2, C3 = C3);
-                cur.rst <- c(i, j, k, mean(cur.uti), mean(cur.uti > uti.cut));
+                cur.rst <- c(cur.rst, k, mean(cur.uti), mean(cur.uti > uti.cut));
                 rst     <- rbind(rst, cur.rst);
             }
         }
     }
-    colnames(rst) <- c("Cut", "N2", "Uti", "Mean", "PLgU");
+
+    ## return
+    colnames(rst) <- c("N1", "N1Resp", "Cut", "N2", "N2Resp",
+                       "NScr", "PrRej", "ETheta",
+                       "UtiF", "MeanUti", "PrLgU");
+    rownames(rst) <- NULL;
+
     rst
 }
 

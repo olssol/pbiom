@@ -138,13 +138,23 @@ NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt,
                       double B1, double C1, double C2, double C3) {
   int           nr = prst.nrow();;
   NumericVector rst(nr);
-  double        etheta, benefit, cost, extra, rej;
+  double        n1, n2, nresp1, nresp2, nsout, rej;
+  double        etheta, extra, respall;
+  double        benefit, cost;
   int           i;
 
   for (i = 0; i < nr; i++) {
-    etheta = prst(i,1) / prst(i,3);
-    extra  = prst(i,0) / prst(i,3);
-    rej    = prst(i,2);
+    nresp1  = prst(i,5);
+    n1      = prst(i,4);
+    n2      = prst(i,3);
+    rej     = prst(i,2);
+    nresp2  = prst(i,1);
+    nsout   = prst(i,0);
+
+    etheta  = nresp2 / n2;
+    extra   = nsout  / (n1+n2);
+    respall = (nresp1 + nresp2) / (n1+n2);
+
     switch (utif)
       {
       case 1:
@@ -154,6 +164,14 @@ NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt,
       case 2:
         benefit = B1 * (etheta - theta0) * (1 - estt) * rej;
         cost    = C1 * extra;
+        break;
+      case 5:
+        benefit = B1 * rej + respall;
+        cost    = (1 - respall) + C1 * extra;
+        break;
+      case 7:
+        benefit = B1 * (etheta - theta0) * rej + respall;
+        cost    = (1 - respall) + C1 * extra;
         break;
       default:
         benefit = rej;
