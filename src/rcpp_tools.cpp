@@ -159,19 +159,19 @@ NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt,
       {
       case 1:
         benefit = B1 * (etheta - theta0) * rej;
-        cost    = C1 * extra;
+        cost    = C2 * extra + C1 * n1 + C3 * n2;
         break;
       case 2:
         benefit = B1 * (etheta - theta0) * (1 - estt) * rej;
-        cost    = C1 * extra;
+        cost    = C2 * extra + C1 * n1 + C3 * n2;
         break;
       case 5:
         benefit = B1 * rej + respall;
-        cost    = (1 - respall) + C1 * extra;
+        cost    = (1 - respall) + C2 * extra + C1 * n1 + C3 * n2;
         break;
       case 7:
         benefit = B1 * (etheta - theta0) * rej + respall;
-        cost    = (1 - respall) + C1 * extra;
+        cost    = (1 - respall) + C2 * extra + C1 * n1 + C3 * n2;
         break;
       default:
         benefit = rej;

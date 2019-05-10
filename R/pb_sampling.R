@@ -57,7 +57,6 @@ pbSmpResp <- function(x.cut, y, cand.cuts = NULL, type = c("simplebin"), iter = 
     rst
 }
 
-
 #' Posterior cumulative response rate
 #'
 #' @param post.q biomarker interval probabilities
@@ -84,6 +83,7 @@ pbCumuPQ <- function(post.q, post.p) {
          cumu.p = t(cumu.p)[,nc:1]);
 }
 
+
 #' Private Function: Sampling from simple binomial of response rates
 #'
 #'
@@ -109,3 +109,4 @@ prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000,
 
     rst
 }
+
