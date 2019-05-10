@@ -41,7 +41,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
     ## predict outcomes
     rst <- NULL;
     for (i in cand.cuts) {
-        cur.estt <- 1 - c(0, probs)[i];
+        cur.estt <- c(0, probs)[i];
         for (j in n2) {
             cur.pred <- pbCfPred(cumu.pq$cumu.q[,i,drop = F],
                                  cumu.pq$cumu.p[,i,drop = F],
@@ -57,7 +57,6 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
                 cur.uti <- pbCfUti(cbind(cur.pred, n1, nresp1),
                                    utif = k, theta0 = theta0, estt = cur.estt,
                                    B1 = B1, C1 = C1, C2 = C2, C3 = C3);
-                rst <- rbind(rst,
                              c(cur.rst, k, mean(cur.uti), mean(cur.uti > uti.cut)));
             }
         }
