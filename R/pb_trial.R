@@ -30,7 +30,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
     s1x    <- do.call(pbSimuBiom, par.biom);
     s1y    <- do.call(pbSimuResp, c(list(x = s1x), par.resp))$y;
     n1     <- par.biom$n;
-    nresp1 <- sum(s1y)
+    nresp1 <- sum(s1y);
 
     ## interim analysis
     s1x.cut <- pbCutBiom(s1x, cuts = truth.cuts);
@@ -57,8 +57,8 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2,
                 cur.uti <- pbCfUti(cbind(cur.pred, n1, nresp1),
                                    utif = k, theta0 = theta0, estt = cur.estt,
                                    B1 = B1, C1 = C1, C2 = C2, C3 = C3);
-                cur.rst <- c(cur.rst, k, mean(cur.uti), mean(cur.uti > uti.cut));
-                rst     <- rbind(rst, cur.rst);
+                rst <- rbind(rst,
+                             c(cur.rst, k, mean(cur.uti), mean(cur.uti > uti.cut)));
             }
         }
     }

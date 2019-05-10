@@ -49,7 +49,8 @@ pbSimuResp <- function(x, betas, type = c("fourpar", "logit")) {
                    fourpar = betas[1] + (betas[2] - betas[1]) / (1 + (betas[3]/x)^betas[4]),
                    logit   = betas[1] + betas[2]*x
                    )
-    py1  <- py1 / (1 + exp(py1));
+    py1  <- exp(py1);
+    py1  <- py1 / (1 + py1);
     rst  <- rbinom(length(x), 1, py1);
 
     list(y   = rst,
