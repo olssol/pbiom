@@ -50,8 +50,6 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
     true.post.p  <- pbSmpResp(true.x.cut$x.cut,   true.y, cand.cuts = cand.cuts, type = resp.mdl);
     true.cumu.pq <- pbCumuPQ(post.q, post.p);
 
-    browser();
-
     ## predict outcomes
     rst <- NULL;
     for (i in cand.cuts) {
