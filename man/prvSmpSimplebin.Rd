@@ -4,7 +4,7 @@
 \alias{prvSmpSimplebin}
 \title{Private Function: Sampling from simple binomial of response rates}
 \usage{
-prvSmpSimplebin(x.cut, y, cand.cuts, iter = 4000, prior.p = c(a = 0.5,
+prvSmpSimplebin(x.cut, y, cand.cuts, iter = 4000, prior.q = c(a = 0.5,
   b = 0.5), ...)
 }
 \description{

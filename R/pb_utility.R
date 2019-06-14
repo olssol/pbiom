@@ -1,3 +1,13 @@
+#' Logit function
+#'
+#'
+#'
+#' @export
+#'
+logit  <- function(x) {
+    log(x / (1-x));
+}
+
 #' Compute utility
 #'
 #'
