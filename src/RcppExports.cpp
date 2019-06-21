@@ -19,8 +19,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // pbCfPredSingle
-void pbCfPredSingle(NumericVector vq, NumericVector vp, int n2, double theta0, double alpha, int rep, NumericMatrix rst);
-RcppExport SEXP _pbiom_pbCfPredSingle(SEXP vqSEXP, SEXP vpSEXP, SEXP n2SEXP, SEXP theta0SEXP, SEXP alphaSEXP, SEXP repSEXP, SEXP rstSEXP) {
+void pbCfPredSingle(NumericVector vq, NumericVector vp, int n2, double theta0, double alpha, int rep, IntegerVector s1y, NumericMatrix rst);
+RcppExport SEXP _pbiom_pbCfPredSingle(SEXP vqSEXP, SEXP vpSEXP, SEXP n2SEXP, SEXP theta0SEXP, SEXP alphaSEXP, SEXP repSEXP, SEXP s1ySEXP, SEXP rstSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type vq(vqSEXP);
@@ -29,14 +29,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type theta0(theta0SEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type rep(repSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type s1y(s1ySEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type rst(rstSEXP);
-    pbCfPredSingle(vq, vp, n2, theta0, alpha, rep, rst);
+    pbCfPredSingle(vq, vp, n2, theta0, alpha, rep, s1y, rst);
     return R_NilValue;
 END_RCPP
 }
 // pbCfPred
-NumericMatrix pbCfPred(NumericMatrix vq, NumericMatrix vp, IntegerVector n2, double theta0, double alpha, int repeach);
-RcppExport SEXP _pbiom_pbCfPred(SEXP vqSEXP, SEXP vpSEXP, SEXP n2SEXP, SEXP theta0SEXP, SEXP alphaSEXP, SEXP repeachSEXP) {
+NumericMatrix pbCfPred(NumericMatrix vq, NumericMatrix vp, IntegerVector n2, double theta0, double alpha, int repeach, IntegerVector s1y);
+RcppExport SEXP _pbiom_pbCfPred(SEXP vqSEXP, SEXP vpSEXP, SEXP n2SEXP, SEXP theta0SEXP, SEXP alphaSEXP, SEXP repeachSEXP, SEXP s1ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -46,7 +47,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type theta0(theta0SEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type repeach(repeachSEXP);
-    rcpp_result_gen = Rcpp::wrap(pbCfPred(vq, vp, n2, theta0, alpha, repeach));
+    Rcpp::traits::input_parameter< IntegerVector >::type s1y(s1ySEXP);
+    rcpp_result_gen = Rcpp::wrap(pbCfPred(vq, vp, n2, theta0, alpha, repeach, s1y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -82,8 +84,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_pbiom_pbCfYtest", (DL_FUNC) &_pbiom_pbCfYtest, 2},
-    {"_pbiom_pbCfPredSingle", (DL_FUNC) &_pbiom_pbCfPredSingle, 7},
-    {"_pbiom_pbCfPred", (DL_FUNC) &_pbiom_pbCfPred, 6},
+    {"_pbiom_pbCfPredSingle", (DL_FUNC) &_pbiom_pbCfPredSingle, 8},
+    {"_pbiom_pbCfPred", (DL_FUNC) &_pbiom_pbCfPred, 7},
     {"_pbiom_pbCfUti", (DL_FUNC) &_pbiom_pbCfUti, 8},
     {"_pbiom_ptemp", (DL_FUNC) &_pbiom_ptemp, 1},
     {NULL, NULL, 0}

@@ -17,22 +17,23 @@ pbCfYtest <- function(y, theta0) {
 #' 
 #'
 #' @export
-pbCfPredSingle <- function(vq, vp, n2, theta0, alpha, rep, rst) {
-    invisible(.Call(`_pbiom_pbCfPredSingle`, vq, vp, n2, theta0, alpha, rep, rst))
+pbCfPredSingle <- function(vq, vp, n2, theta0, alpha, rep, s1y, rst) {
+    invisible(.Call(`_pbiom_pbCfPredSingle`, vq, vp, n2, theta0, alpha, rep, s1y, rst))
 }
 
 #' Predict for posterior samples from the interim analysis
 #'
 #' 
-#' 
+#' @param s1y sub-vector from stage 1 for patients satisfying biomarker cut point
 #'
 #' @export
-pbCfPred <- function(vq, vp, n2, theta0, alpha, repeach) {
-    .Call(`_pbiom_pbCfPred`, vq, vp, n2, theta0, alpha, repeach)
+pbCfPred <- function(vq, vp, n2, theta0, alpha, repeach, s1y) {
+    .Call(`_pbiom_pbCfPred`, vq, vp, n2, theta0, alpha, repeach, s1y)
 }
 
 #' Get utilities
 #'
+#' @param prst predicted results plus stage 1 total size and number of responders
 #'
 #' @export
 pbCfUti <- function(prst, utif, theta0, estt, B1, C1, C2, C3) {
