@@ -106,7 +106,7 @@ void pbCfPredSingle(NumericVector vq, NumericVector vp, int n2,
     rej12  = pbCfYtest(y12, theta0)  < alpha;
 
     if (0 == n2) {
-      rej12 = rej2;
+      rej2 = rej12;
     }
 
     //save
