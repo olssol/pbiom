@@ -4,13 +4,14 @@
 #' @param par.resp list of parameters for simulating responses
 #' @param iter number of iterations for interim analysis
 #' @param nlarge large n for evaluating the truth
+#' @param true.cumu.pq truth of cumu.pq
 #'
 #' @export
 #'
 pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                               prior.p = NULL, prior.q = c(a = 0.5, b = 0.5),
                               cut.x = NULL, cut.quants = c(0.25, 0.5, 0.75), cut.known = TRUE,
-                              cand.cuts = 1:(length(cut.quants)+1),
+                              cand.cuts = 1:(length(cut.quants)+1), true.cumu.pq = NULL,
                               resp.mdl = "simplebin",
                               uti.f, alpha = 0.05, uti.cut = 0.1,
                               B1 = 1, C1 = 1, C2 = 0, C3 = 0,
@@ -46,14 +47,18 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
 
     ## interim analysis
     s1x.cut <- pbCutBiom(s1x, cuts = cut.x, probs = cut.quants);
-    post.q  <- pbSmpBiom(s1x.cut$x.count, prior.p = prior.p, iter = iter);
-    post.p  <- pbSmpResp(s1x.cut$x.cut, s1y, cand.cuts = cand.cuts, type = resp.mdl);
-    cumu.pq <- pbCumuPQ(post.q, post.p);
+
+    if (is.null(true.cumu.pq)) {
+        post.q  <- pbSmpBiom(s1x.cut$x.count, prior.p = prior.p, iter = iter);
+        post.p  <- pbSmpResp(s1x.cut$x.cut, s1y, cand.cuts = cand.cuts, type = resp.mdl);
+        cumu.pq <- pbCumuPQ(post.q, post.p);
+    } else {
+        cumu.pq <- true.cumu.pq;
+    }
 
     ## predict outcomes
     rst <- NULL;
     for (i in cand.cuts) {
-
         ## cut proportion
         cur.estt <- c(0, cut.quants)[i];
 
@@ -96,6 +101,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                        "MeanUti2", "PrLgU2", "MeanUti12", "PrLgU12");
     rownames(rst) <- NULL;
 
-    rst
+    list(cumu.pq  = cumu.pq,
+         simu.rst = rst);
 }
 
