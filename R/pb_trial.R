@@ -41,8 +41,6 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
     n1.all     <- par.biom$n;
     nresp1.all <- sum(s1y);
 
-    print(sum(s1y));
-
     ## cut points
     if (is.null(cut.x)) {
         if (cut.known) {
