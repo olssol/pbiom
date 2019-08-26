@@ -6,6 +6,14 @@
 #' @param nlarge large n for evaluating the truth
 #' @param true.cumu.pq truth of cumu.pq
 #'
+#' @return A dataframe with the following columns
+#' \itemize{
+#'    \item{N1All}{Total number patients in stage 1}
+#'    \item{N1RespAll}{Total number responders in stage 1}
+#'    \item{N1}{Number of stage 1 patients satisfying the biomarker cut criteria}
+#'    \item{N1Resp}{Number of stage 1 responders satisfying the biomarker cut criteria}
+#' }
+#'
 #' @export
 #'
 pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
@@ -32,6 +40,8 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
     s1y        <- do.call(pbSimuResp, c(list(x = s1x), par.resp))$y;
     n1.all     <- par.biom$n;
     nresp1.all <- sum(s1y);
+
+    print(sum(s1y));
 
     ## cut points
     if (is.null(cut.x)) {
