@@ -94,9 +94,6 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                                    theta0 = theta0, estt = cur.estt,
                                    B1 = B1, C1 = C1, C2 = C2, C3 = C3);
 
-                    if (any(is.infinite(tmp))) {
-                        browser();
-                    }
                     cur.uti <- c(cur.uti, mean(tmp), mean(tmp > uti.cut));
                 }
 
