@@ -88,10 +88,15 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
             for (k in uti.f) {
                 cur.uti <- k;
                 for (l in 1:2) {
-                    tmp <- pbCfUti(cbind(cur.pred[,uti.cols[[l]]], n1.all, nresp1.all),
+                    tmp <- pbCfUti(cbind(cur.pred[,uti.cols[[l]], drop = FALSE],
+                                         n1.all, nresp1.all),
                                    utif = k,
                                    theta0 = theta0, estt = cur.estt,
                                    B1 = B1, C1 = C1, C2 = C2, C3 = C3);
+
+                    if (any(is.infinite(tmp))) {
+                        browser();
+                    }
                     cur.uti <- c(cur.uti, mean(tmp), mean(tmp > uti.cut));
                 }
 
