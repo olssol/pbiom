@@ -24,7 +24,11 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                               uti.f, alpha = 0.05, uti.cut = 0.1,
                               B1 = 1, C1 = 1, C2 = 0, C3 = 0,
                               iter = 4000, nlarge = 50000,
-                              repeach = 1) {
+                              repeach = 1,
+                              seed    = NULL) {
+
+    if (!is.null)
+        old.seed <- set.seed(seed);
 
     ## utility columns
     uti.cols <- list(c("nscreenout", "n2", "nresp2", "rej2",  "etheta2"),
@@ -103,6 +107,10 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
         }
     }
 
+    ## reset seed
+    if (!is.null(seed))
+        set.seed(old.seed);
+
     ## return
     colnames(rst) <- c("N1All", "N1RespAll", "Cut", "NScr",
                        "N2", "N2Resp", "ETheta2",  "PrRej2",
@@ -111,7 +119,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                        "MeanUti2", "PrLgU2", "MeanUti12", "PrLgU12");
     rownames(rst) <- NULL;
 
-    list(cumu.pq  = cumu.pq,
-         simu.rst = rst);
+    rst <- list(cumu.pq  = cumu.pq,
+                simu.rst = rst);
 }
 
