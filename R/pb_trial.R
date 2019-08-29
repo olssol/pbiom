@@ -27,7 +27,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                               repeach = 1,
                               seed    = NULL) {
 
-    if (!is.null)
+    if (!is.null(seed))
         old.seed <- set.seed(seed);
 
     ## utility columns
