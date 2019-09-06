@@ -89,7 +89,7 @@ pbCumuPQ <- function(post.q, post.p) {
 #'
 #'
 prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000,
-                            prior.q = c(a = 0.5, b = 0.5), ...) {
+                            prior.q = c(a = 0.0025, b = 0.0025), ...) {
     rst <- NULL;
     for (ct in cand.cuts) {
         cur.inx <- which(ct == x.cut);
