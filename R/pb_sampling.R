@@ -19,20 +19,25 @@ pbCutBiom <- function(x, cuts = NULL, probs = c(0.25, 0.5, 0.75)) {
 }
 
 
-
 #' Posterior distribution of biomarker as intervals
 #'
 #'
 #' @export
 #'
-pbSmpBiom <- function(x.count, prior.p = NULL, iter = 4000) {
+pbSmpBiom <- function(x.count, prior.q = NULL, iter = 4000) {
     n.cat <- length(x.count);
-    if (is.null(prior.p)) {
-        prior.p <- rep(0.5, n.cat);
+    if (is.null(prior.q)) {
+        prior.q <- rep(0.5, n.cat);
     }
 
-    post.p <- prior.p + x.count;
-    rst    <- rdirichlet(iter, post.p);
+    post.q <- rdirichlet(iter, prior.q + x.count);
+
+    ## get cumulative probabilities
+    nq        = ncol(post.q);
+    post.cumu = apply(post.q, 1, function(x) get.cumu(x, nq));
+
+    list(post.q = post.q,
+         cumu.q = t(post.cumu));
 }
 
 
@@ -44,15 +49,19 @@ pbSmpBiom <- function(x.count, prior.p = NULL, iter = 4000) {
 #'
 #'
 #' @export
-pbSmpResp <- function(x.cut, y, cand.cuts = NULL, type = c("simplebin"), iter = 4000, ...) {
+pbSmpResp <- function(x.cut, y, cand.cuts = NULL, type = c("cumubin", "simplebin"),
+                      iter = 4000, ...) {
     type <- match.arg(type);
 
     if (is.null(cand.cuts))
         cand.cuts <- 1:max(x.cut);
 
     rst  <- switch(type,
-                   simplebin = prvSmpSimplebin(x.cut, y, cand.cuts,
-                                               iter = iter, ...));
+                   simplebin = prvSmpSimpleBin(x.cut, y, cand.cuts, cumu = FALSE,
+                                               iter = iter, ...),
+                   cumubin   = prvSmpSimpleBin(x.cut, y, cand.cuts, cumu = TRUE,
+                                             iter = iter, ...)
+                   );
 
     rst
 }
@@ -68,19 +77,22 @@ pbSmpResp <- function(x.cut, y, cand.cuts = NULL, type = c("simplebin"), iter = 
 #' @export
 pbCumuPQ <- function(post.q, post.p) {
 
-    nc <- ncol(post.p);
-    stopifnot(nc == ncol(post.q));
+    cumu.q = post.q$cumu.q;
+    post.q = post.q$post.q;
 
-    post.q <- post.q[,nc:1];
-    post.p <- post.p[,nc:1];
-    pq     <- post.q * post.p;
+    if (!attr(post.p, "cumu")) {
+        nc = ncol(post.p);
+        stopifnot(nc == ncol(post.q));
 
-    cumu.q  <- apply(post.q, 1, cumsum);
-    cumu.pq <- apply(pq,     1, cumsum);
-    cumu.p  <- cumu.pq / cumu.q;
+        pq      <- post.q * post.p;
+        cumu.pq <- apply(pq, 1, function(x) get.cumu(x, nc));
+        cumu.p  <- t(cumu.pq) / cumu.q;
+    } else {
+        cumu.p = post.p;
+    }
 
-    list(cumu.q = t(cumu.q)[,nc:1],
-         cumu.p = t(cumu.p)[,nc:1]);
+    list(cumu.q = cumu.q,
+         cumu.p = cumu.p);
 }
 
 
@@ -88,12 +100,17 @@ pbCumuPQ <- function(post.q, post.p) {
 #'
 #'
 #'
-prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000,
-                            prior.q = c(a = 0.0025, b = 0.0025), ...) {
+prvSmpSimpleBin <- function(x.cut, y, cand.cuts, iter = 4000, cumu = FALSE,
+                            prior.p = c(a = 0.0025, b = 0.0025), ...) {
     rst <- NULL;
     for (ct in cand.cuts) {
-        cur.inx <- which(ct == x.cut);
-        cur.n   <- length(cur.inx);
+        if (cumu) {
+            cur.inx <- which(x.cut >= ct);
+        } else {
+            cur.inx <- which(ct == x.cut);
+        }
+
+        cur.n <- length(cur.inx);
         if (0 == cur.n) {
             cur.a <- 0;
             cur.b <- 0;
@@ -102,11 +119,19 @@ prvSmpSimplebin <- function(x.cut, y, cand.cuts, iter = 4000,
             cur.b <- cur.n - cur.a;
         }
 
-        cur.rst <- rbeta(n = iter, cur.a + prior.q["a"], cur.b + prior.q["b"]);
+        cur.rst <- rbeta(n = iter, cur.a + prior.p["a"], cur.b + prior.p["b"]);
         rst     <- cbind(rst, cur.rst);
     }
-    colnames(rst) <- cand.cuts;
 
+    attr(rst, "cumu") = cumu;
+    colnames(rst)     = cand.cuts;
     rst
 }
 
+
+## get cumulative sums
+get.cumu  <-  function(q, nq) {
+    q = q[nq:1];
+    q = cumsum(q);
+    q[nq:1]
+}
