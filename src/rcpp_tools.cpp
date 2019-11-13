@@ -172,7 +172,7 @@ NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt,
 
   for (i = 0; i < nr; i++) {
     nsout   = prst(i,0);
-    n2      = prst(i,1);
+    n2      = prst(i,1); // number of patients in stage 2
     nresp2  = prst(i,2);
     rej     = prst(i,3);
     etheta  = prst(i,4);
@@ -184,24 +184,29 @@ NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt,
     switch (utif)
       {
       case 1:
-        benefit = B1 * (n1 + n2) * (etheta - theta0) * rej;
-        cost    = C2 * nsout + C1 * n1 + C3 * n2;
+        // u1 in paper
+        benefit = B1 * (etheta - theta0) * rej;
+        cost    = C2 * nsout + C3 * n2;
         break;
       case 2:
-        benefit = B1 * (n1 + n2) * (etheta - theta0) * (1 - estt) * rej;
-        cost    = C2 * nsout + C1 * n1 + C3 * n2;
+        // u2 in paper
+        benefit = B1 * (etheta - theta0) * (1 - estt) * rej;
+        cost    = C2 * nsout + C3 * n2;
         break;
       case 5:
-        benefit = B1 * (n1 + n2) * rej + respall;
-        cost    = (n1 + n2 - respall) + C2 * nsout + C1 * n1 + C3 * n2;
+        //u4 in the paper
+        benefit = B1 * rej + nresp2;
+        cost    = (n2 - nresp2) + C2 * nsout + C3 * n2;
         break;
       case 7:
-        benefit = B1 * (n1 + n2) * (etheta - theta0) * rej + respall;
-        cost    = (n1 + n2 - respall) + C2 * nsout + C1 * n1 + C3 * n2;
+        //u3 in the paper
+        benefit = B1 * (etheta - theta0) * rej + nresp2;
+        cost    = (n2 - nresp2) + C2 * nsout + C3 * n2;
         break;
       case 12:
-        benefit = B1 * (n1 + n2) * rej;
-        cost    = C2 * nsout + C1 * n1 + C3 * n2;
+        //u5 in the paper 
+        benefit = B1 * rej;
+        cost    = C2 * nsout + C3 * n2;
         break;
       default:
         benefit = rej;

@@ -1,6 +1,6 @@
 Package: pbiom
 Title: Phase II Design for Biomarker Validation
-Version: 0.2
+Version: 0.3
 Authors@R: 
     person(given = "Chenguang",
            family = "Wang",
