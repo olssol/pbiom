@@ -17,9 +17,12 @@
 #' @export
 #'
 pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
-                              prior.q = NULL, prior.p = c(a = 0.025, b = 0.025),
-                              cut.x = NULL, cut.quants = c(0.25, 0.5, 0.75), cut.known = TRUE,
-                              cand.cuts = 1:(length(cut.quants)+1), true.cumu.pq = NULL,
+                              prior.q = NULL,
+                              prior.p = cbind(a = 0.025, b = 0.025),
+                              cut.x = NULL, cut.quants = c(0.25, 0.5, 0.75),
+                              cut.known = TRUE,
+                              cand.cuts = 1:(length(cut.quants)+1),
+                              true.cumu.pq = NULL,
                               resp.mdl = "simplebin",
                               uti.f, alpha = 0.05, uti.cut = 0.1,
                               B1 = 1, C1 = 1, C2 = 0, C3 = 0,
@@ -61,8 +64,15 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
     s1x.cut <- pbCutBiom(s1x, cuts = cut.x, probs = cut.quants);
 
     if (is.null(true.cumu.pq)) {
-        post.q  <- pbSmpBiom(s1x.cut$x.count, prior.q = prior.q, iter = iter);
-        post.p  <- pbSmpResp(s1x.cut$x.cut, s1y, cand.cuts = cand.cuts, type = resp.mdl, prior.p = prior.p);
+        post.q  <- pbSmpBiom(s1x.cut$x.count,
+                             prior.q = prior.q,
+                             iter = iter);
+
+        post.p  <- pbSmpResp(s1x.cut$x.cut,
+                             s1y,
+                             cand.cuts = cand.cuts,
+                             type = resp.mdl,
+                             prior.p = prior.p);
         cumu.pq <- pbCumuPQ(post.q, post.p);
     } else {
         cumu.pq <- true.cumu.pq;
@@ -122,4 +132,3 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
     rst <- list(cumu.pq  = cumu.pq,
                 simu.rst = rst);
 }
-
