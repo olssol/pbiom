@@ -6,9 +6,6 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins("cpp11")]]
 
-
-
-
 // [[Rcpp::init]]
 void my_package_init(DllInfo *dll) {
   // initialization code here
@@ -40,7 +37,7 @@ double pbCfYtest(NumericVector y, double theta0) {
 //' Predict for a single set of value for rep times
 //'
 //' @param rep number of replications
-//' 
+//'
 //'
 //' @export
 // [[Rcpp::export]]
@@ -124,7 +121,7 @@ void pbCfPredSingle(NumericVector vq, NumericVector vp, int n2,
 
 //' Predict for posterior samples from the interim analysis
 //'
-//' 
+//'
 //' @param s1y sub-vector from stage 1 for patients satisfying biomarker cut point
 //'
 //' @export
@@ -138,7 +135,7 @@ NumericMatrix pbCfPred(NumericMatrix vq, NumericMatrix vp, IntegerVector n2,
 
   for (l = 0; l < nn; l++) {
     for (i = 0; i < nr; i++) {
-      // predict single 
+      // predict single
       pbCfPredSingle(vq(i,_), vp(i,_), n2(l), theta0, alpha, repeach, s1y, crst);
 
       for (j = 0; j < repeach; j++) {
@@ -204,7 +201,7 @@ NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt,
         cost    = (n2 - nresp2) + C2 * nsout + C3 * n2;
         break;
       case 12:
-        //u5 in the paper 
+        //u5 in the paper
         benefit = B1 * rej;
         cost    = C2 * nsout + C3 * n2;
         break;
@@ -221,7 +218,7 @@ NumericVector pbCfUti(NumericMatrix prst, int utif, double theta0, double estt,
 //' Test function
 //'
 //' @param u input value
-//' @return u squared 
+//' @return u squared
 //' @export
 // [[Rcpp::export]]
 double ptemp(double u) {

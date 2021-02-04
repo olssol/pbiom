@@ -14,7 +14,7 @@ pbCfYtest <- function(y, theta0) {
 #' Predict for a single set of value for rep times
 #'
 #' @param rep number of replications
-#' 
+#'
 #'
 #' @export
 pbCfPredSingle <- function(vq, vp, n2, theta0, alpha, rep, s1y, rst) {
@@ -23,7 +23,7 @@ pbCfPredSingle <- function(vq, vp, n2, theta0, alpha, rep, s1y, rst) {
 
 #' Predict for posterior samples from the interim analysis
 #'
-#' 
+#'
 #' @param s1y sub-vector from stage 1 for patients satisfying biomarker cut point
 #'
 #' @export
@@ -43,7 +43,7 @@ pbCfUti <- function(prst, utif, theta0, estt, B1, C1, C2, C3) {
 #' Test function
 #'
 #' @param u input value
-#' @return u squared 
+#' @return u squared
 #' @export
 ptemp <- function(u) {
     .Call(`_pbiom_ptemp`, u)

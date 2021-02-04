@@ -5,14 +5,13 @@
 #' @param iter number of iterations for interim analysis
 #' @param nlarge large n for evaluating the truth
 #' @param true.cumu.pq truth of cumu.pq
-#'
-#' @return A dataframe with the following columns
-#' \itemize{
-#'    \item{N1All}{Total number patients in stage 1}
-#'    \item{N1RespAll}{Total number responders in stage 1}
-#'    \item{N1}{Number of stage 1 patients satisfying the biomarker cut criteria}
-#'    \item{N1Resp}{Number of stage 1 responders satisfying the biomarker cut criteria}
-#' }
+#' @param adj_precision Adjust the utility by precision of
+#'     posterior response rate at current cut point vs. at lowest cut point
+#' @return A dataframe with the following columns \itemize{ \item{N1All}{Total
+#'     number patients in stage 1} \item{N1RespAll}{Total number responders in
+#'     stage 1} \item{N1}{Number of stage 1 patients satisfying the biomarker
+#'     cut criteria} \item{N1Resp}{Number of stage 1 responders satisfying the
+#'     biomarker cut criteria} }
 #'
 #' @export
 #'
@@ -28,6 +27,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                               B1 = 1, C1 = 1, C2 = 0, C3 = 0,
                               iter = 4000, nlarge = 50000,
                               repeach = 1,
+                              adj_precision = TRUE,
                               seed    = NULL) {
 
     if (!is.null(seed))
@@ -39,7 +39,8 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
 
     ## find cut points
     if (is.null(cut.quants)) {
-        stop("Biomarker level cut quantiles (cut.quants) needs to be provided.");
+        stop("Biomarker level cut quantiles (cut.quants)
+              needs to be provided.");
     }
 
     ## simulate first stage;
@@ -66,17 +67,21 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
     if (is.null(true.cumu.pq)) {
         post.q  <- pbSmpBiom(s1x.cut$x.count,
                              prior.q = prior.q,
-                             iter = iter);
+                             iter    = iter);
 
         post.p  <- pbSmpResp(s1x.cut$x.cut,
                              s1y,
                              cand.cuts = cand.cuts,
-                             type = resp.mdl,
-                             prior.p = prior.p);
+                             type      = resp.mdl,
+                             prior.p   = prior.p);
         cumu.pq <- pbCumuPQ(post.q, post.p);
     } else {
         cumu.pq <- true.cumu.pq;
     }
+
+    ## precision ratio at each cut points
+    cumu_resp_precision <- apply(cumu.pq$cumu.p, 2, sd)
+    cumu_resp_precision <- cumu_resp_precision[1] / cumu_resp_precision
 
     ## predict outcomes
     rst <- NULL;
@@ -90,8 +95,8 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
         ## predict stage 2
         for (j in n2) {
             ## predict based on posterior
-            cur.pred <- pbCfPred(cumu.pq$cumu.q[,i,drop = F],
-                                 cumu.pq$cumu.p[,i,drop = F],
+            cur.pred <- pbCfPred(cumu.pq$cumu.q[, i, drop = F],
+                                 cumu.pq$cumu.p[, i, drop = F],
                                  j, theta0, alpha, repeach, s1y.cut);
             cur.sum <- apply(cur.pred, 2, mean);
 
@@ -102,17 +107,24 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
             for (k in uti.f) {
                 cur.uti <- k;
                 for (l in 1:2) {
-                    tmp <- pbCfUti(cbind(cur.pred[,uti.cols[[l]], drop = FALSE],
-                                         n1.all, nresp1.all),
+                    tmp <- pbCfUti(cbind(cur.pred[, uti.cols[[l]],
+                                                  drop = FALSE],
+                                         n1.all,
+                                         nresp1.all),
                                    utif = k,
                                    theta0 = theta0, estt = cur.estt,
                                    B1 = B1, C1 = C1, C2 = C2, C3 = C3);
+
+                    ## whether adjust for precision in the posterior distribution
+                    ## of response rates
+                    if (adj_precision)
+                        tmp <- tmp * cumu_resp_precision[i]
 
                     cur.uti <- c(cur.uti, mean(tmp), mean(tmp > uti.cut));
                 }
 
                 ## use stage 1&2
-                rst <- rbind(rst, c(cur.rst,cur.uti));
+                rst <- rbind(rst, c(cur.rst, cur.uti));
             }
         }
     }
