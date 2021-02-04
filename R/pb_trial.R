@@ -27,7 +27,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                               B1 = 1, C1 = 1, C2 = 0, C3 = 0,
                               iter = 4000, nlarge = 50000,
                               repeach = 1,
-                              adj_precision = TRUE,
+                              adj_precision = 1,
                               seed    = NULL) {
 
     if (!is.null(seed))
@@ -82,6 +82,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
     ## precision ratio at each cut points
     cumu_resp_precision <- apply(cumu.pq$cumu.p, 2, sd)
     cumu_resp_precision <- cumu_resp_precision[1] / cumu_resp_precision
+    cumu_resp_precision <- cumu_resp_precision^adj_precision
 
     ## predict outcomes
     rst <- NULL;
@@ -117,9 +118,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
 
                     ## whether adjust for precision in the posterior distribution
                     ## of response rates
-                    if (adj_precision)
-                        tmp <- tmp * cumu_resp_precision[i]
-
+                    tmp     <- tmp * cumu_resp_precision[i]
                     cur.uti <- c(cur.uti, mean(tmp), mean(tmp > uti.cut));
                 }
 
