@@ -20,7 +20,7 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                               prior.p = cbind(a = 0.025, b = 0.025),
                               cut.x = NULL, cut.quants = c(0.25, 0.5, 0.75),
                               cut.known = TRUE,
-                              cand.cuts = 1:(length(cut.quants)+1),
+                              cand.cuts = 1:(length(cut.quants) + 1),
                               true.cumu.pq = NULL,
                               resp.mdl = "simplebin",
                               uti.f, alpha = 0.05, uti.cut = 0.1,
@@ -64,25 +64,27 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
     ## interim analysis
     s1x.cut <- pbCutBiom(s1x, cuts = cut.x, probs = cut.quants);
 
-    if (is.null(true.cumu.pq)) {
-        post.q  <- pbSmpBiom(s1x.cut$x.count,
-                             prior.q = prior.q,
-                             iter    = iter);
+    post.q  <- pbSmpBiom(s1x.cut$x.count,
+                         prior.q = prior.q,
+                         iter    = iter);
 
-        post.p  <- pbSmpResp(s1x.cut$x.cut,
-                             s1y,
-                             cand.cuts = cand.cuts,
-                             type      = resp.mdl,
-                             prior.p   = prior.p);
-        cumu.pq <- pbCumuPQ(post.q, post.p);
-    } else {
-        cumu.pq <- true.cumu.pq;
-    }
+    post.p  <- pbSmpResp(s1x.cut$x.cut,
+                         s1y,
+                         cand.cuts = cand.cuts,
+                         type      = resp.mdl,
+                         prior.p   = prior.p);
+    cumu.pq <- pbCumuPQ(post.q, post.p);
 
     ## precision ratio at each cut points
     cumu_resp_precision <- apply(cumu.pq$cumu.p, 2, sd)
     cumu_resp_precision <- cumu_resp_precision[1] / cumu_resp_precision
     cumu_resp_precision <- cumu_resp_precision^adj_precision
+
+    ## if truth is provided, then the second stage patients will only be
+    ## generated once at the true parameters
+    if (!is.null(true.cumu.pq)) {
+        cumu.pq <- true.cumu.pq;
+    }
 
     ## predict outcomes
     rst <- NULL;
@@ -116,8 +118,8 @@ pbSimuSingleTrial <- function(par.biom, par.resp, n2, theta0,
                                    theta0 = theta0, estt = cur.estt,
                                    B1 = B1, C1 = C1, C2 = C2, C3 = C3);
 
-                    ## whether adjust for precision in the posterior distribution
-                    ## of response rates
+                    ## whether adjust for precision in the posterior
+                    ## distribution of response rates
                     tmp     <- tmp * cumu_resp_precision[i]
                     cur.uti <- c(cur.uti, mean(tmp), mean(tmp > uti.cut));
                 }
