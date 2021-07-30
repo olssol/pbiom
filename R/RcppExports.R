@@ -48,4 +48,3 @@ pbCfUti <- function(prst, utif, theta0, estt, B1, C1, C2, C3) {
 ptemp <- function(u) {
     .Call(`_pbiom_ptemp`, u)
 }
-
